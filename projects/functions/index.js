@@ -1,7 +1,5 @@
 /* ДЗ 1 - Функции */
 
-import { Console, log } from 'console';
-
 /*
  Задание 1:
 
@@ -83,8 +81,7 @@ let f = returnCounter();
    returnArgumentsArray(1, 2, 3) вернет [1, 2, 3]
  */
 function returnArgumentsArray(...numbers) {
-  let result = numbers;
-  return result;
+  return numbers;
 }
 
 export {

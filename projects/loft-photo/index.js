@@ -1,10 +1,9 @@
 import pages from './pages';
 import model from './model';
 import('./styles.css');
+import mainPage from './mainPage';
+import loginPage from './loginPage';
 
-const pageNames = ['login', 'main', 'profile'];
-
-document.addEventListener('click', () => {
-  let page = model.getRandomElement(pageNames);
-  pages.openPage(page);
-});
+pages.openPage('login');
+loginPage.handleEvents();
+mainPage.handleEvents();

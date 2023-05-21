@@ -1,16 +1,17 @@
-let PERM_FRIENDS = 1;
-let PERM_PHOTOS = 1;
+let PERM_FRIENDS = 2;
+let PERM_PHOTOS = 4;
 
 export default {
   getRandomElement(array) {
     let randomIndex = Math.round(Math.random() * (array.length - 1));
     return array[randomIndex];
   },
+
   async getNextPhoto() {
     let friend = this.getRandomElement(this.friends.items);
     let photos = await this.getFriendPhotos(friend.id);
     let photo = this.getRandomElement(photos.items);
-    let size = thise.findSize(photo);
+    let size = this.findSize(photo);
 
     return { friend, id: photo.id, url: size.url };
   },
@@ -24,13 +25,12 @@ export default {
   login() {
     return new Promise((resolve, reject) => {
       VK.init({
-        apiId: 51643234,
+        apiId: 51645561,
       });
       VK.Auth.login((response) => {
         if (response.session) {
           resolve(response);
         } else {
-          console.log(response);
           reject(response);
         }
       }, PERM_FRIENDS | PERM_PHOTOS);
@@ -42,7 +42,7 @@ export default {
     this.friends = await this.getFriends();
   },
 
-  callApi(method, params) {
+  callAPI(method, params) {
     params.v = '5.131';
 
     return new Promise((resolve, reject) => {
@@ -61,28 +61,25 @@ export default {
       fields: ['photo_50', 'photo_100'],
     };
 
-    return this.callApi('friends.get', params);
+    return this.callAPI('friends.get', params);
   },
 
-  getPhotos(owner) {
-    let params = { owner_id: owner };
+  getPhotos(user) {
+    let params = { owner_id: user };
 
-    return this.callApi('photos.getAll', params);
+    return this.callAPI('photos.getAll', params);
   },
 
-  photoCache: {},
+  // photoCache: {},
 
   async getFriendPhotos(id) {
-    const photos = this.photoCache[id];
-
+    let photos = this.photoCache[id];
     if (photos) {
       return photos;
     }
 
     photos = await this.getPhotos(id);
-
     this.photoCache[id] = photos;
-
     return photos;
   },
 };

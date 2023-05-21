@@ -4,7 +4,9 @@ import mainPage from './mainPage';
 
 export default {
   handleEvents() {
-    document.querySelector('.page-login-button').addEventListener('click', async () => {
+    let log = document.querySelector('.page-login-button');
+
+    log.addEventListener('click', async () => {
       await model.login();
       await model.init();
       pages.openPage('main');

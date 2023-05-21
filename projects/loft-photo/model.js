@@ -17,9 +17,9 @@ export default {
   },
 
   findSize(photo) {
-    const photSize = photo.sizes.find((size) => size.width >= 360);
+    let photoSize = photo.sizes.find((size) => size.width >= 360);
 
-    return photSize;
+    return photoSize;
   },
 
   login() {
@@ -40,6 +40,7 @@ export default {
   async init() {
     this.photoCache = {};
     this.friends = await this.getFriends();
+    [this.me] = await this.getUsers();
   },
 
   callAPI(method, params) {
@@ -57,7 +58,7 @@ export default {
   },
 
   getFriends() {
-    const params = {
+    let params = {
       fields: ['photo_50', 'photo_100'],
     };
 
@@ -70,8 +71,6 @@ export default {
     return this.callAPI('photos.getAll', params);
   },
 
-  // photoCache: {},
-
   async getFriendPhotos(id) {
     let photos = this.photoCache[id];
     if (photos) {
@@ -81,5 +80,21 @@ export default {
     photos = await this.getPhotos(id);
     this.photoCache[id] = photos;
     return photos;
+  },
+
+  logout() {
+    return new Promise((resolve) => VK.Auth.revokeGrants(resolve));
+  },
+
+  getUsers(ids) {
+    let params = {
+      fields: [`photo_50`, `photo_100`],
+    };
+
+    if (ids) {
+      params.user_ids = ids;
+    }
+
+    return this.callAPI('users.get', params);
   },
 };
